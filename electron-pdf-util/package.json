@@ -1,0 +1,43 @@
+{
+  "name": "electron-pdf-util",
+  "version": "1.0.0",
+  "description": "Electron + Spring Boot + Vue Desktop App",
+  "main": "main.js",
+  "scripts": {
+    "electron": "electron .",
+    "electron-dev": "concurrently \"npm run serve\" \"wait-on http://localhost:5173 && electron .\"",
+    "serve": "cd ../vue-pdf-util && npm run dev",
+    "build-vue": "cd ../vue-pdf-util && npm run build",
+    "build-electron": "electron-builder",
+    "build": "npm run build-vue && npm run build-electron",
+    "start-backend": "cd ../springboot-server && mvn spring-boot:run",
+    "dev": "concurrently \"npm run start-backend\" \"npm run electron-dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "electron": "^22.0.0",
+    "electron-builder": "^24.0.0",
+    "electron-is-dev": "^2.0.0",
+    "wait-on": "^7.0.1"
+  },
+  "build": {
+    "appId": "com.example.desktop-app",
+    "productName": "桌面应用Demo",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "../vue-pdf-util/dist/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

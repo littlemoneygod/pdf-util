@@ -4,6 +4,7 @@ const fs = require('fs');
 
 const isDev = !app.isPackaged;
 const { shell } = require('electron');
+const { spawn } = require('child_process'); 
 
 let mainWindow;
 
@@ -20,13 +21,23 @@ function createWindow() {
     show: false
   });
 
-  // 加载应用
-  if (isDev) {
-    mainWindow.loadURL('http://localhost:5173');
-    // mainWindow.webContents.openDevTools();
-  } else {
-    mainWindow.loadFile(path.join(__dirname, '../vue-frontend/dist/index.html'));
-  }
+  // // 加载应用
+  // if (isDev) {
+  //   mainWindow.loadURL('http://localhost:5173');
+  //   // mainWindow.webContents.openDevTools();
+  // } else {
+  //   mainWindow.loadFile(path.join(__dirname, '../vue-frontend/dist/index.html'));
+  // }
+
+    // 开启开发者工具以便调试
+  mainWindow.webContents.openDevTools();
+
+  // 监听加载失败事件
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    console.log('Failed to load:', errorCode, errorDescription);
+  });
+
+  mainWindow.loadFile('static/index.html');
 
   // 准备就绪时显示窗口
   mainWindow.once('ready-to-show', () => {
@@ -72,7 +83,10 @@ ipcMain.handle('select-pdf-files', async () => {
   }
 });
 
-app.whenReady().then(createWindow);
+app.whenReady().then(()=>{
+startBackend();
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -157,3 +171,44 @@ ipcMain.handle('save-file-dialog', async (event, buffer, defaultFileName) => {
     return { success: false, error: error.message };
   }
 });
+
+
+// 启动 Spring Boot 后端JAR函数
+function startBackend() {
+  // 假设你的JAR文件就在Electron项目根目录下
+  const jarPath = path.join(__dirname, 'pdfutil-1.0-SNAPSHOT.jar'); // 请替换为你的JAR文件名
+  
+  // 检查JAR文件是否存在
+  if (!fs.existsSync(jarPath)) {
+    console.error('JAR file not found:', jarPath);
+    return;
+  }
+
+ // 设置环境变量
+  const env = {
+    ...process.env, // 继承当前环境
+    LANG: 'zh_CN.UTF-8',
+    LC_ALL: 'zh_CN.UTF-8',
+    LC_CTYPE: 'zh_CN.UTF-8',
+    JAVA_TOOL_OPTIONS: '-Duser.language=zh -Duser.region=CN -Dfile.encoding=UTF-8'
+  };
+
+  javaProcess = spawn('java', [
+    '-Duser.language=zh',
+    '-Duser.region=CN', 
+    '-Dfile.encoding=UTF-8',
+    '-jar', jarPath
+  ], {
+    env: env,
+    stdio: ['pipe', 'pipe', 'pipe']
+  });
+
+  javaProcess.stdout.on('data', (data) => {
+    console.log('后端输出:', data.toString().trim());
+  });
+
+  javaProcess.stderr.on('data', (data) => {
+    const error = data.toString().trim();
+    console.error('后端错误:', error);
+  });
+}

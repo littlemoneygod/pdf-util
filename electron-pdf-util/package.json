@@ -4,14 +4,10 @@
   "description": "Electron + Spring Boot + Vue Desktop App",
   "main": "main.js",
   "scripts": {
-    "electron": "electron .",
-    "electron-dev": "concurrently \"npm run serve\" \"wait-on http://localhost:5173 && electron .\"",
-    "serve": "cd ../vue-pdf-util && npm run dev",
-    "build-vue": "cd ../vue-pdf-util && npm run build",
-    "build-electron": "electron-builder",
-    "build": "npm run build-vue && npm run build-electron",
-    "start-backend": "cd ../springboot-server && mvn spring-boot:run",
-    "dev": "concurrently \"npm run start-backend\" \"npm run electron-dev\""
+    "start": "electron .",
+    "dev": "concurrently \"npm run start-backend\" \"npm run electron-dev\"",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
@@ -21,15 +17,19 @@
     "wait-on": "^7.0.1"
   },
   "build": {
-    "appId": "com.example.desktop-app",
-    "productName": "桌面应用Demo",
+    "appId": "com.lmd.pdf-util",
+    "productName": "zy-pdf-util",
+    "asar": false,
     "directories": {
       "output": "dist-electron"
     },
     "files": [
       "main.js",
       "preload.js",
-      "../vue-pdf-util/dist/**/*"
+      "package.json",
+      "node_modules/**/*",
+      "static/**/*",
+      "pdfutil-1.0-SNAPSHOT.jar"
     ],
     "win": {
       "target": "nsis",

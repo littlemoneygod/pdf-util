@@ -46,6 +46,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot-dependencies.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.aspose</groupId>
+            <artifactId>aspose-words</artifactId>
+            <version>21.6</version>
+        </dependency>
     </dependencies>
 
 </project>

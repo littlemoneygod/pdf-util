@@ -403,9 +403,9 @@ const mergePdfs = async () => {
       );
       
       if (result.success) {
-        alert(`PDF合并成功！文件已保存到: ${result.filePath}`);
+        // alert(`PDF合并成功！文件已保存到: ${result.filePath}`);
       } else if (result.canceled) {
-        alert('用户取消了保存');
+        // alert('用户取消了保存');
       } else {
         alert(`保存失败: ${result.error}`);
       }
@@ -420,7 +420,7 @@ const mergePdfs = async () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      alert('PDF合并成功！文件已开始下载。');
+      // alert('PDF合并成功！文件已开始下载。');
     }
     
   } catch (error) {
@@ -473,10 +473,10 @@ const splitPdf = async () => {
       );
       
       if (result.success) {
-        alert(`PDF拆分成功！文件已保存到: ${result.filePath}`);
+        // alert(`PDF拆分成功！文件已保存到: ${result.filePath}`);
         showSplitDialog.value = false;
       } else if (result.canceled) {
-        alert('用户取消了保存');
+        // alert('用户取消了保存');
       } else {
         alert(`保存失败: ${result.error}`);
       }
@@ -491,7 +491,7 @@ const splitPdf = async () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      alert('PDF拆分成功！文件已开始下载。');
+      // alert('PDF拆分成功！文件已开始下载。');
       showSplitDialog.value = false;
     }
     

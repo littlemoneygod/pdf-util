@@ -2,11 +2,11 @@
 const config = {
   // 开发环境
   development: {
-    baseURL: 'http://localhost:8080'
+    baseURL: 'http://localhost:9898'
   },
   // 生产环境
   production: {
-    baseURL: 'http://localhost:8080' // 或者你的服务器IP
+    baseURL: 'http://localhost:9898' // 或者你的服务器IP
   }
 }
 
